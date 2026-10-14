@@ -1,0 +1,27 @@
+name: Bug report
+description: Something works differently from the README or the specs
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened and what you expected
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Messages or commands sent to the bot, relevant settings (no tokens or keys)
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Log or incident code
+      description: The incident code the bot showed, or log lines (check they hold no secrets)
+      render: text
+  - type: input
+    id: version
+    attributes:
+      label: Template version or commit

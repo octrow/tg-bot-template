@@ -1,0 +1,21 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+:root{--bg:#0f1720;--fg:#e8eef5;--muted:#93a4b8;--accent:#2aa3e0;--card:#18232f}
+*{margin:0;box-sizing:border-box}
+body{width:1280px;height:640px;background:var(--bg);color:var(--fg);font-family:Inter,system-ui,sans-serif;
+padding:72px 80px;display:grid;grid-template-columns:1fr 420px;gap:56px;align-items:center}
+h1{font-size:64px;font-weight:800;letter-spacing:-1.5px}
+p{font-size:30px;line-height:1.35;color:var(--muted);margin-top:24px}
+.tags{white-space:nowrap;margin-top:40px;font:500 20px ui-monospace,monospace;color:var(--accent)}
+.chat{display:flex;flex-direction:column;gap:16px}
+.m{background:var(--card);border-radius:18px;padding:18px 22px;font-size:22px;line-height:1.4}
+.u{align-self:flex-end;background:var(--accent);color:#04121c;max-width:80%}
+.b small{display:block;color:var(--muted);font-size:17px;margin-bottom:6px}
+</style></head><body>
+<div><h1>tg-bot-template</h1>
+<p>A Telegram bot that answers questions about your product from its docs and code.</p>
+<div class="tags">python · python-telegram-bot · openrouter · sqlite</div></div>
+<div class="chat">
+<div class="m u">How do I reset a user's quota?</div>
+<div class="m b"><small>💬 Help</small>Open Admin → Users, pick the user and press "Reset quota". It calls <code>reset_quota()</code> in billing.py.</div>
+</div></body></html>

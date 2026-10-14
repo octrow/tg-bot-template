@@ -1,0 +1,152 @@
+{
+  "version": 1,
+  "_doc": "DOC_STYLE.md-derived rules. Lexical rules require --danger-fix to rewrite. Phrases are warn-only.",
+
+  "lexical": [
+    {
+      "id": "razvyazat",
+      "match": "stem",
+      "stem": "развяз",
+      "replacement": "решить",
+      "preserve_ending": false,
+      "severity": "error",
+      "examples": ["развязать", "развязали", "развязывание"],
+      "note": "DOC_STYLE.md prefers 'решить'"
+    },
+    {
+      "id": "kanonizaciya",
+      "match": "stem",
+      "stem": "канонизаци",
+      "replacement": "стандартизаци",
+      "preserve_ending": true,
+      "endings": {
+        "я": "я",
+        "и": "и",
+        "ю": "ю",
+        "ей": "ей",
+        "ям": "ям",
+        "ями": "ями",
+        "ях": "ях"
+      },
+      "severity": "error"
+    },
+    {
+      "id": "kanonizirovat",
+      "match": "stem",
+      "stem": "канонизиров",
+      "replacement": "стандартизировать",
+      "preserve_ending": false,
+      "severity": "error"
+    },
+    {
+      "id": "stilisticheskaya_treshchina",
+      "match": "regex",
+      "regex": "(?i)стилистическ\\w*\\s+трещин\\w*",
+      "replacement": "несоответствие стилей",
+      "severity": "error"
+    },
+    {
+      "id": "na_provode",
+      "match": "regex",
+      "regex": "(?i)\\bна\\s+проводе\\b",
+      "replacement": "в API",
+      "severity": "error"
+    },
+    {
+      "id": "wire_imena",
+      "match": "regex",
+      "regex": "(?i)wire[- ]?имен\\w*",
+      "replacement": "публичные имена",
+      "severity": "error"
+    },
+    {
+      "id": "kanon",
+      "match": "word",
+      "literal": "канон",
+      "replacement": "стандарт",
+      "severity": "error"
+    },
+    {
+      "id": "ruchka_api",
+      "match": "stem",
+      "stem": "ручк",
+      "replacement": "endpoint",
+      "preserve_ending": false,
+      "context_required": ["api", "endpoint", "method", "роут", "хэндлер", "ручк", "url", "http"],
+      "context_window_chars": 200,
+      "severity": "error",
+      "note": "Only fires near API context to avoid false positives on the literal pen"
+    },
+    {
+      "id": "nedopokroet",
+      "match": "stem",
+      "stem": "недопокро",
+      "replacement": "пропустит",
+      "preserve_ending": false,
+      "severity": "error"
+    },
+    {
+      "id": "mehanicheskoe_pereimenovanie",
+      "match": "regex",
+      "regex": "(?i)механическ\\w*\\s+переименов\\w*",
+      "replacement": "переименования",
+      "severity": "error"
+    }
+  ],
+
+  "phrases": {
+    "filler_ru": [
+      "в этом документе",
+      "как упоминалось выше",
+      "как указано выше",
+      "обратите внимание",
+      "следует отметить",
+      "стоит отметить",
+      "хотелось бы отметить",
+      "здравствуйте",
+      "извините",
+      "прошу прощения"
+    ],
+    "filler_en": [
+      "in this document",
+      "as mentioned above",
+      "as noted above",
+      "\\bnote that\\b",
+      "please note",
+      "it should be noted",
+      "\\bhello\\b",
+      "hi there",
+      "apologies",
+      "we are sorry"
+    ],
+    "marketing_en": [
+      "elegant solution",
+      "powerful feature",
+      "seamlessly integrate[sd]?",
+      "cutting[- ]edge",
+      "state[- ]of[- ]the[- ]art",
+      "world[- ]class",
+      "best[- ]in[- ]class"
+    ],
+    "marketing_ru": [
+      "элегантн\\w+ решени\\w+",
+      "мощн\\w+ функци\\w+",
+      "бесшовно интегрируется",
+      "передов\\w+ решени\\w+",
+      "лучш\\w+ в классе"
+    ],
+    "passive_en": [
+      "it is recommended to",
+      "it is suggested that",
+      "it should be noted that",
+      "it is worth noting",
+      "we recommend that you"
+    ],
+    "passive_ru": [
+      "\\bрекомендуется\\b",
+      "\\bпредлагается\\b",
+      "следует учесть",
+      "стоит обратить внимание"
+    ]
+  }
+}

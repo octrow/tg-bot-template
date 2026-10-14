@@ -1,0 +1,29 @@
+# Плейсхолдеры: пользователь tg-bot и каталог /opt/tg-bot - см. deploy/DEPLOY.md.
+[Unit]
+Description=Telegram bot (tg-bot-template)
+After=network-online.target
+Wants=network-online.target
+# Без лимита попыток: пока чужой поллер жив, бот падает и поднимается раз в
+# минуту - юнит не должен из-за этого перейти в failed навсегда.
+StartLimitIntervalSec=0
+
+[Service]
+User=tg-bot
+Group=tg-bot
+WorkingDirectory=/opt/tg-bot
+EnvironmentFile=/opt/tg-bot/.env
+# .venv создаётся вручную при первом деплое (deploy/DEPLOY.md).
+ExecStart=/opt/tg-bot/.venv/bin/python -m tgbot
+# always, а не on-failure: long-polling бот не должен оставаться лежать ни
+# при каком исходе (в исходном боте Conflict -> чистый выход -> 3 дня тишины).
+Restart=always
+# 60 c, чтобы при живом втором поллере не дёргать Telegram чаще раза в минуту.
+RestartSec=60
+# Own /tmp namespace для процесса бота.
+PrivateTmp=yes
+# Остановка дожидается обработки текущих апдейтов; дольше 15 c - SIGKILL, а не
+# 90 c по умолчанию (цикл напоминаний снимается в post_stop и её не держит).
+TimeoutStopSec=15
+
+[Install]
+WantedBy=multi-user.target

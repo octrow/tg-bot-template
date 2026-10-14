@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+#
+# pre-commit - run extra_scripts/fix_unicode.sh (fix mode) over staged files
+# before every commit, so typographic Unicode ("smart quotes", em-dash, etc.)
+# never lands in the repo by accident.
+#
+# .py files are special-cased: the worker does a blind text substitution
+# (it does not parse Python), and «vложенные» quotes inside a "..." string
+# can turn into a SyntaxError. So for .py files we snapshot the original,
+# run the fix, then verify the result still parses; if it doesn't, we
+# restore the original and print a warning instead of blocking the commit.
+#
+# This hook is intentionally not a blocking gate: it always exits 0 unless
+# the formatter itself fails fatally (missing python3, bad rules file, ...).
+#
+# Enable with: git config core.hooksPath .githooks
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "${REPO_ROOT}"
+
+FIX_UNICODE="${REPO_ROOT}/extra_scripts/fix_unicode.sh"
+[[ -x "${FIX_UNICODE}" ]] || exit 0
+
+# Extensions the formatter understands.
+ALLOWED_EXTS="py md txt json yaml yml rst toml"
+
+is_allowed_ext() {
+  local ext="${1##*.}"
+  local e
+  for e in ${ALLOWED_EXTS}; do
+    [[ "${ext}" == "${e}" ]] && return 0
+  done
+  return 1
+}
+
+is_excluded_path() {
+  local f="$1"
+  case "${f}" in
+    .venv/*|.git/*|.githooks/*|extra_scripts/*|.env|.env.*|*.db)
+      return 0
+      ;;
+  esac
+  return 1
+}
+
+mapfile -t STAGED < <(git diff --cached --name-only --diff-filter=ACMR -- . 2>/dev/null || true)
+
+declare -a TARGETS=()
+for f in "${STAGED[@]}"; do
+  [[ -z "${f}" ]] && continue
+  [[ -f "${f}" ]] || continue          # skip deleted/renamed-away, non-existent
+  is_excluded_path "${f}" && continue
+  is_allowed_ext "${f}" || continue
+  TARGETS+=("${f}")
+done
+
+# Secrets: the only blocking check. CI (security.yml) scans the whole history too.
+if command -v gitleaks >/dev/null 2>&1; then
+  gitleaks protect --staged --redact --no-banner || {
+    echo "gitleaks: secret in staged changes, commit blocked" >&2
+    exit 1
+  }
+fi
+
+[[ ${#TARGETS[@]} -eq 0 ]] && exit 0
+
+for f in "${TARGETS[@]}"; do
+  if [[ "${f}" == *.py ]]; then
+    backup="$(mktemp)"
+    cp "${f}" "${backup}"
+
+    # The worker maps «...» and “...” to '"', which terminates the enclosing
+    # "..." literal - the usual way a .py file comes out broken. Pre-map the
+    # double-quote family to "'" so nesting stays valid; the ast check below
+    # still guards the leftovers (guillemets inside a '...' literal).
+    python3 - "${f}" <<'PY' || true
+import pathlib, sys
+p = pathlib.Path(sys.argv[1])
+text = p.read_text(encoding="utf-8")
+fixed = text.translate({ord(c): "'" for c in "«»“”„"})
+if fixed != text:
+    p.write_text(fixed, encoding="utf-8")
+PY
+
+    "${FIX_UNICODE}" "${f}" >/dev/null 2>&1 || true
+
+    if ! python3 -c "import ast, sys; ast.parse(open(sys.argv[1], encoding='utf-8').read())" "${f}" 2>/dev/null; then
+      echo "WARNING: fix_unicode broke ${f} (invalid Python after fix) - reverted, left unchanged." >&2
+      cp "${backup}" "${f}"
+      rm -f "${backup}"
+      continue
+    fi
+    rm -f "${backup}"
+  else
+    "${FIX_UNICODE}" "${f}" >/dev/null 2>&1 || true
+  fi
+
+  git add -- "${f}"
+done
+
+exit 0

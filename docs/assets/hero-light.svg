@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" width="1200" height="420" role="img" aria-labelledby="t d">
+  <title id="t">tg-bot-template</title>
+  <desc id="d">A Telegram bot that answers questions about your product from its docs and code: a user asks a question, the bot searches and reads the source files, then answers in plain language with Clear and Not clear buttons.</desc>
+  <rect width="1200" height="420" rx="24" fill="#f6f8fa"/>
+
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', sans-serif">
+    <text x="56" y="96" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" fill="#0a6fae">python-telegram-bot 22 · SQLite · OpenRouter</text>
+    <text x="54" y="166" font-size="60" font-weight="800" letter-spacing="-1.5" fill="#1f2328">tg-bot-template</text>
+    <text x="56" y="218" font-size="25" fill="#59636e">A Telegram bot that answers questions</text>
+    <text x="56" y="252" font-size="25" fill="#59636e">about your product from its docs and code.</text>
+
+    <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" fill="#1f2328">
+      <rect x="56" y="296" width="166" height="38" rx="19" fill="none" stroke="#d0d7de"/>
+      <text x="139" y="321" text-anchor="middle">model ladder</text>
+      <rect x="234" y="296" width="198" height="38" rx="19" fill="none" stroke="#d0d7de"/>
+      <text x="333" y="321" text-anchor="middle">message batches</text>
+      <rect x="444" y="296" width="133" height="38" rx="19" fill="none" stroke="#d0d7de"/>
+      <text x="510" y="321" text-anchor="middle">878 tests</text>
+      <rect x="56" y="346" width="220" height="38" rx="19" fill="none" stroke="#d0d7de"/>
+      <text x="166" y="371" text-anchor="middle">screenshot → text</text>
+      <rect x="288" y="346" width="198" height="38" rx="19" fill="none" stroke="#d0d7de"/>
+      <text x="387" y="371" text-anchor="middle">feedback, admin</text>
+    </g>
+
+    <!-- chat: the Help mode at work -->
+    <rect x="620" y="36" width="524" height="348" rx="20" fill="#ffffff" stroke="#d0d7de"/>
+
+    <rect x="776" y="60" width="344" height="48" rx="16" fill="#2aa3e0"/>
+    <text x="796" y="91" font-size="20" fill="#04121c">How do I reset a user's quota?</text>
+
+    <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" fill="#59636e">
+      <text x="644" y="142"><tspan fill="#0a6fae">›</tspan> grep "quota" src/</text>
+      <text x="644" y="170"><tspan fill="#0a6fae">›</tspan> read_file src/billing.py</text>
+    </g>
+
+    <rect x="644" y="186" width="476" height="132" rx="16" fill="#eef2f6"/>
+    <text x="664" y="214" font-size="18" fill="#59636e">💬 Help</text>
+    <g font-size="20" fill="#1f2328">
+      <text x="664" y="244">Open Admin → Users, pick the user</text>
+      <text x="664" y="272">and press "Reset quota". It calls</text>
+      <text x="664" y="300"><tspan font-family="ui-monospace, SFMono-Regular, Menlo, monospace">reset_quota()</tspan> in billing.py.</text>
+    </g>
+
+    <g font-size="18" fill="#1f2328" text-anchor="middle">
+      <rect x="644" y="330" width="230" height="38" rx="12" fill="#eef2f6" stroke="#d0d7de"/>
+      <text x="759" y="355">Clear</text>
+      <rect x="890" y="330" width="230" height="38" rx="12" fill="#eef2f6" stroke="#d0d7de"/>
+      <text x="1005" y="355">Not clear</text>
+    </g>
+  </g>
+</svg>

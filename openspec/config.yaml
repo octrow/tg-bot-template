@@ -1,0 +1,35 @@
+schema: spec-driven
+
+# Project context (optional)
+# This is shown to AI when creating artifacts.
+# Add your tech stack, conventions, style guides, domain knowledge, etc.
+# Example:
+#   context: |
+  E2E (True E2E, tests_e2e/, спека e2e-testing): у каждой копии шаблона свой тестовый бот
+  @<имя_тестового_бота> (bot id <id_тестового_бота>), отдельный от прод-бота. Его токен
+  лежит в .env как TEST_TELEGRAM_BOT_TOKEN; набор tests_e2e читает E2E_BOT_TOKEN /
+  E2E_BOT_USERNAME из .env.e2e, туда переносится то же значение. Прод-бот и его
+  TELEGRAM_BOT_TOKEN в e2e не используются никогда (набор отказывается стартовать, если
+  id бота совпадает). Ручную и e2e-проверку сценариев change планировать на тестовом боте.
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always include a "Non-goals" section
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
+
+# Per-operation guidance (optional)
+# Add advisory guidance for how apply and archive work should be conducted.
+# This is separate from artifact rules above.
+# Example:
+#   operations:
+#     apply:
+#       guidance:
+#         - Keep test summaries concise
+#     archive:
+#       guidance:
+#         - Summarize the archive outcome before finishing
