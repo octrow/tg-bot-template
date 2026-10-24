@@ -162,15 +162,13 @@ def test_env_file_syntax(tmp_path):
     встречается в наших .env; строка без `=` не должна ронять старт."""
     env_file = _write_env(
         tmp_path / ".env",
-        "\n".join([
-            "# комментарий",
-            "",
-            "   ",
-            "мусор без равно",
-            "export OPENROUTER_API_KEY='sk-quoted'",
-            'OPENROUTER_MODEL="z-ai/glm-5.3-flash"',
-            "OPENAI_API_KEY=  sk-spaces  ",
-        ]) + "\n",
+        "# комментарий\n"
+        "\n"
+        "   \n"
+        "мусор без равно\n"
+        "export OPENROUTER_API_KEY='sk-quoted'\n"
+        'OPENROUTER_MODEL="z-ai/glm-5.3-flash"\n'
+        "OPENAI_API_KEY=  sk-spaces  \n",
     )
     config = load_config({"TELEGRAM_BOT_TOKEN": "t"}, env_files=[env_file])
     assert config.openrouter_api_key == "sk-quoted"
