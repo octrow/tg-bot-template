@@ -297,10 +297,8 @@ async def update_status(sent, text: str) -> None:
     сообщения. `sent` - None-safe, ошибка Bot API не пробрасывается."""
     if sent is None:
         return
-    try:
+    with contextlib.suppress(Exception):
         await sent.edit_text(text)
-    except Exception:
-        pass
 
 
 # Шаг таймера ожидания: чаще это шум правок и лимиты Bot API.
