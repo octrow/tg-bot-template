@@ -221,6 +221,23 @@ async def test_decision_edits_all_admin_pushes(conn, two_admins_handlers):
     assert all("Решил" in e.text and "одобрено" in e.text for e in bot.edited)
 
 
+async def test_decision_during_push_still_edits_admin_pushes(conn, two_admins_handlers):
+    """Первый админ решает, пока пуш второму ещё в пути: message_id пушей
+    ещё не в БД, но карточки всё равно правятся, когда пуши допишутся."""
+
+    class RacingBot(FakeBot):
+        async def send_message(self, chat_id, text, reply_markup=None, **kwargs):
+            if chat_id == SECOND_ADMIN:
+                req = db.open_access_request(conn, USER)
+                await decide(two_admins_handlers, self, req["id"])
+            return await super().send_message(chat_id, text, reply_markup, **kwargs)
+
+    bot = RacingBot()
+    await submit(two_admins_handlers, bot)
+    assert sorted(e.chat_id for e in bot.edited) == [ADMIN_ID, SECOND_ADMIN]
+    assert all("одобрено" in e.text for e in bot.edited)
+
+
 async def test_admin_race_second_gets_already_decided(conn, two_admins_handlers):
     bot = FakeBot()
     await submit(two_admins_handlers, bot)

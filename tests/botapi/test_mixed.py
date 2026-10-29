@@ -31,7 +31,7 @@ async def test_access_request_approved_while_admin_asks_reference(bot):
     mark = bot.send(STRANGER, "Иван Петров, отдел продаж")
     card = await bot.wait("sendMessage", chat=ADMIN, after=mark, contains=str(STRANGER))
     mark = bot.click(ADMIN, card.result, button(card, "access:approve:"))
-    await bot.wait("sendMessage", chat=STRANGER, after=mark)
+    await bot.wait("sendMessage", chat=STRANGER, after=mark, contains=T.ACCESS_GRANTED)
     start = await bot.ask(STRANGER, "/start")
     assert T.START in start.params["text"]
 

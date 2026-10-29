@@ -131,6 +131,15 @@ async def submit_access(update, context, req: dict, name_reason: str | None) -> 
     req = db.get_access_request(conn, req["id"]) or req
     sent, default_card = await _push_access_card(deps, context, req, update.effective_user)
     db.set_access_messages(conn, req["id"], default_card, sent)
+    # Админ мог решить, пока пуши ещё уходили: его _decide не видел их
+    # message_id и ничего не правил - правим здесь.
+    # ponytail: при решении ровно между записью и этой проверкой правка
+    # пройдёт дважды - второй раз Bot API ответит "not modified" в лог.
+    decided = db.get_access_request(conn, req["id"]) or req
+    if decided["status"] in ("approved", "denied"):
+        await _edit_access_pushes(
+            conn, context, decided, decided["decided_by"], decided["status"]
+        )
     db.log_event(
         conn,
         req["user_id"],
