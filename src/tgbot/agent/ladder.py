@@ -336,7 +336,7 @@ async def _try_stage(
             prompt, api_key=api_key, conn=conn, user_id=user_id,
             context_label=context_label, lang=lang, **request,
         )
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001 - любой сбой ступени ведёт на следующую
         failure = failure_of(provider, exc)
         log.warning(
             "Ступень %s недоступна (%s): %s (%s)",

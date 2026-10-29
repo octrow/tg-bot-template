@@ -1,6 +1,7 @@
 """Общее для всех зон: /start, /help, меню команд, обработчик ошибок,
 кнопка "Сообщить разработчикам" и ответ на опечатку в команде."""
 
+import contextlib
 import logging
 
 from .. import __version__, alerts, db, i18n, modes, utils
@@ -308,10 +309,8 @@ async def _report_failure(conn, message, lang: str, user_id: int, data: str) -> 
     )
     feedback_id = db.add_feedback(conn, user_id, db.last_session_id(conn, user_id), text)
     db.log_event(conn, user_id, "failure_reported", {"log_id": log_id, "feedback_id": feedback_id})
-    try:
+    with contextlib.suppress(Exception):  # снятие кнопки вторично
         await message.edit_reply_markup(reply_markup=None)
-    except Exception:  # noqa: BLE001 - снятие кнопки вторично
-        pass
     await message.reply_text(i18n.t(lang, "FAILURE_REPORTED"))
 
 
@@ -333,10 +332,8 @@ async def failure_callback(update, context):
         await _report_failure(deps.conn, message, lang, user_id, getattr(query, "data", "") or "")
     except Exception:  # noqa: BLE001 - см. docstring
         logger.warning("Отзыв о сбое не создан", exc_info=True)
-        try:
+        with contextlib.suppress(Exception):
             await message.reply_text(i18n.t(lang, "FAILURE_REPORT_FAILED"))
-        except Exception:  # noqa: BLE001
-            pass
 
 
 async def stray_callback(update, context):

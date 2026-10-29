@@ -277,7 +277,7 @@ async def status(message, text: str):
         return None
     try:
         return await message.reply_text(text)
-    except Exception:  # чат недоступен - не критично, просто не покажем статус
+    except Exception:  # noqa: BLE001 - чат недоступен, просто не покажем статус
         return None
 
 
@@ -285,10 +285,8 @@ async def clear_status(sent) -> None:
     """Убирает статус-сообщение после ответа агента; ошибки не важны."""
     if sent is None:
         return
-    try:
+    with contextlib.suppress(Exception):
         await sent.delete()
-    except Exception:
-        pass
 
 
 async def update_status(sent, text: str) -> None:
@@ -395,20 +393,17 @@ async def react(message, emoji: str = ACCEPTED_REACTION) -> None:
             _reacted.discard(_reacted_order[0])
         _reacted_order.append(key)
         _reacted.add(key)
-    try:
+    with contextlib.suppress(Exception):  # реакция - украшение, не критична
         await message.set_reaction(emoji)
-    except Exception:
-        pass
 
 
 async def typing(message) -> None:
     """Индикатор "печатает..." перед долгим вызовом агента; ошибки не важны."""
     if message is None:
         return
-    try:
+    # нет метода/чат недоступен - индикация не критична
+    with contextlib.suppress(Exception):
         await message.reply_chat_action("typing")
-    except Exception:  # нет метода/чат недоступен - индикация не критична
-        pass
 
 
 def _url_buttons(markup) -> InlineKeyboardMarkup | None:
@@ -445,17 +440,14 @@ async def mark_chosen(message, label: str, lang: str = i18n.DEFAULT_LANG) -> Non
     # Широкий except - не как в reply(): здесь правка уже показанного
     # сообщения, нового сообщения при её ошибке не шлём - дублировать нечего.
     keep_markup = _url_buttons(getattr(message, "reply_markup", None))
-    try:
+    # правка текста недоступна - хотя бы убрать кнопки
+    with contextlib.suppress(Exception):
         await message.edit_text(
             f"{base}\n\n{line}".strip(), parse_mode="HTML", reply_markup=keep_markup
         )
         return
-    except Exception:  # правка текста недоступна - хотя бы убрать кнопки
-        pass
-    try:
+    with contextlib.suppress(Exception):
         await message.edit_reply_markup(reply_markup=None)
-    except Exception:
-        pass
 
 
 async def send_html(message, text: str, keyboard=None):
