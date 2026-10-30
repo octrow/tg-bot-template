@@ -37,7 +37,6 @@
 #
 # Default paths (when no paths are given, fix mode):
 #   docs/**/*.md
-#   docs/**/*  (excludes .sh files)
 #
 # Exit codes:
 #   0   Clean / fixes applied
@@ -156,8 +155,7 @@ if [[ -n "${GIT_SCOPE}" ]]; then
 elif [[ ${#TARGETS[@]} -eq 0 ]]; then
   cd "${REPO_ROOT}"
   mapfile -t _docs   < <(find "docs" -type f -name "*.md" 2>/dev/null | sort)
-  mapfile -t _daniil < <(find "docs" -type f \( "${EXT_FIND_ARGS[@]}" \) ! -name "*.sh" 2>/dev/null | sort)
-  for f in "${_docs[@]}" "${_daniil[@]}"; do
+  for f in "${_docs[@]}"; do
     [[ -f "${f}" ]] && FILES+=("${REPO_ROOT}/${f#./}")
   done
 
