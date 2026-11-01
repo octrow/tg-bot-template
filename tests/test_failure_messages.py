@@ -42,7 +42,10 @@ def test_failure_text_is_plain_and_carries_the_code(failure, key, lang, catalog)
     assert not any(word in text for word in TECH_WORDS)
 
 
-def _down(monkeypatch, exc=RuntimeError("502 Bad Gateway")):
+def _down(monkeypatch, exc=None):
+    if exc is None:
+        exc = RuntimeError("502 Bad Gateway")
+
     async def fail(prompt, **kwargs):
         raise exc
 
