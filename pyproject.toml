@@ -30,3 +30,7 @@ version = {attr = "tgbot.__version__"}
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
+
+[project.urls]
+Homepage = "https://github.com/octrow/tg-bot-template"
+Issues = "https://github.com/octrow/tg-bot-template/issues"
